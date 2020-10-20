@@ -1,0 +1,44 @@
+apply plugin: 'groovy'
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['src','vars']
+        }
+        resources {
+            srcDirs = ['resources']
+        }
+    }
+
+    test {
+        java {
+            srcDir 'test'
+        }
+    }
+}
+
+test {
+  beforeTest { descriptor ->
+     logger.lifecycle("Running test: ${descriptor}")
+  }
+}
+
+repositories {
+    jcenter()
+    maven {
+        url "https://repo.jenkins-ci.org/releases/"
+    }
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:3.0.6'
+    compile 'org.apache.ivy:ivy:2.4.0'
+    compile 'org.jenkins-ci.main:jenkins-core:2.164.1'
+    def staplerGAV = 'org.kohsuke.stapler:stapler:1.255'
+    compile staplerGAV
+    annotationProcessor staplerGAV
+    compile 'org.jenkins-ci.plugins.workflow:workflow-step-api:2.19@jar'
+    compile 'org.jenkins-ci.plugins:pipeline-utility-steps:2.2.0@jar'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile "org.mockito:mockito-core:2.+"
+}
